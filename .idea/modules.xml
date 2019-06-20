@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/get-wear-os-and-android-talking-master.iml" filepath="$PROJECT_DIR$/get-wear-os-and-android-talking-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidService.iml" filepath="$PROJECT_DIR$/AndroidService.iml" />
       <module fileurl="file://$PROJECT_DIR$/mobile/mobile.iml" filepath="$PROJECT_DIR$/mobile/mobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/wear/wear.iml" filepath="$PROJECT_DIR$/wear/wear.iml" />
     </modules>

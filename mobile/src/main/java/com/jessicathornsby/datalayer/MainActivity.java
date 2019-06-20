@@ -1165,7 +1165,48 @@ public class MainActivity extends AccessibilityService {
 
                     try {
                         while ((fromServer = in.readLine()) != null) {
-                            Log.d("DesktopMobile", "Gesture" + fromServer);
+
+
+                            gestureBuffer.add(new Gesture(fromServer, getGestureFromWatch()));
+                            boolean isActivationGesture = true;
+                            if (gestureBuffer.size() >= 4) {
+                                for(Gesture g : gestureBuffer)
+                                    Log.d("DesktopMobile", "BUFFER: Gesture "+g.getGesture()+" Orientation: "+g.getOrientation()+ " Timestamp: "+g.getTimeStamp());
+                                Log.d("DesktopMobile", "TimeStamp: "+ (gestureBuffer.get(gestureBuffer.size() - 1).getTimeStamp() - gestureBuffer.get(0).getTimeStamp())+" buffer size: "+gestureBuffer.size());
+
+                                if (gestureBuffer.get(gestureBuffer.size() - 1).getTimeStamp() - gestureBuffer.get(0).getTimeStamp() < 5000) {
+                                    Log.d("DesktopMobile", "INSIDE WINDOW TIME OF 4 SECONDS");
+                                    for (int i = 0; i < gestureBuffer.size() && isActivationGesture; i++) {
+                                        if((i == 0 || i == 2)) {
+                                            if (!(gestureBuffer.get(i).getOrientation().compareTo("Palm_down") == 0 && gestureBuffer.get(i).getGesture().compareTo("Fist") == 0))
+                                            {
+                                                isActivationGesture = false;
+                                            }
+                                        }else{
+                                            if (!(gestureBuffer.get(i).getOrientation().compareTo("Palm_left") == 0 && gestureBuffer.get(i).getGesture().compareTo("Fist") == 0))
+                                            {
+                                                isActivationGesture = false;
+                                            }
+                                        }
+
+                                    }
+
+
+                                //gestureBuffer.remove(0);
+
+
+                                    if (isActivationGesture) {
+                                        if (gestureActivated) {
+                                            gestureActivated = false;
+                                            Log.d("Mobile", "GESTURE RECOGNITION DEACTIVATED....");
+                                        } else {
+                                            gestureActivated = true;
+                                            Log.d("Mobile", "GESTURE RECOGNITION ACTIVATED....");
+                                        }
+                                    }
+                                }
+                                gestureBuffer.remove(0);
+                            }
 
 
                             if(gestureActivated)
@@ -1186,6 +1227,7 @@ public class MainActivity extends AccessibilityService {
 
     public void setGestureFromWatch(String gestureFromWatch) {
         this.gestureFromWatch = gestureFromWatch;
+        //Log.d("Mobile", "GESTURE SET:"+ gestureFromWatch);
     }
 
     public class Receiver extends BroadcastReceiver {
@@ -1196,36 +1238,6 @@ public class MainActivity extends AccessibilityService {
             //Log.d("Mobile", message+" "+intent.getStringExtra("message"));
             setGestureFromWatch(intent.getStringExtra("message"));
 
-            gestureBuffer.add(new Gesture(fromServer, getGestureFromWatch()));
-            boolean isActivationGesture = true;
-            if (gestureBuffer.size() >= 4)
-            {
-                if(gestureBuffer.get(gestureBuffer.size()-1).getTimeStamp() - gestureBuffer.get(0).getTimeStamp() < 4000)
-                {
-                    for (int i = 0; i < gestureBuffer.size() && isActivationGesture; i++)
-                    {
-                        if(!((i == 0 || i == 2) && gestureBuffer.get(i).getOrientation().compareTo("Palm_Down") == 0)) {
-                            isActivationGesture = false;
-                        }
-                        else if(!((i == 1 || i == 3) && gestureBuffer.get(i).getOrientation().compareTo("Palm_Left") == 0)) {
-                            isActivationGesture = false;
-                        }
-
-                    }
-
-                }
-                gestureBuffer.remove(0);
-            }
-            if(isActivationGesture)
-            {
-                if(gestureActivated){
-                    gestureActivated = false;
-                    Log.d("Mobile", "GESTURE RECOGNITION DEACTIVATED....");
-                }else {
-                    gestureActivated = true;
-                    Log.d("Mobile", "GESTURE RECOGNITION ACTIVATED....");
-                }
-            }
 
         }
     }

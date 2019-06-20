@@ -35,6 +35,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     int sentMessageNumber = 1;
     private SensorManager sensorManager;
     private Sensor mAccelerometer;
+    private String previousGesture = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,15 +91,21 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        Log.d("smartwtach", sensorEvent.values[1]+"");
+        //Log.d("smartwtach", sensorEvent.values[1]+"");
         String handPosition ="Palm_left";
         //Log.d("VALORES", "x: "+sensorEvent.values[0]+" y: "+sensorEvent.values[1]+" z: "+sensorEvent.values[2]);
-        if(sensorEvent.values[0] < 0 && sensorEvent.values[1] > 0 && sensorEvent.values[2] > 0)
+        if((sensorEvent.values[0] > 8 && sensorEvent.values[1] > -1 && sensorEvent.values[2] > -1) ||
+                (sensorEvent.values[0] < 2 && sensorEvent.values[1] < 1 && sensorEvent.values[2] > 8))
             handPosition = "Palm_down";
-        else if(sensorEvent.values[0] < 0 && sensorEvent.values[1] < 0 && sensorEvent.values[2] > 0)
+        else if((sensorEvent.values[0] > 8 && sensorEvent.values[1] < -1 && sensorEvent.values[2] < 1) ||
+                (sensorEvent.values[0] < 1 && sensorEvent.values[1] < -8 && sensorEvent.values[2] > -1))
             handPosition = "Palm_left";
         String datapath = "/my_path";
-        new SendMessage(datapath, handPosition).start();
+        if(previousGesture.compareTo(handPosition) != 0) {
+            new SendMessage(datapath, handPosition).start();
+            Log.d("smartwtach", handPosition);
+        }
+        previousGesture = handPosition;
     }
 
     @Override
