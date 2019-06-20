@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">DataLayer</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="pose">Pose: %s</string>
+</resources>
