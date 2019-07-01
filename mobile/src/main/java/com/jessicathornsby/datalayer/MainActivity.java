@@ -11,6 +11,7 @@ import android.support.v4.app.ServiceCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;*/
 import android.content.BroadcastReceiver;
+import android.os.Looper;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -59,8 +60,8 @@ import com.thalmic.myo.Quaternion;
 
 public class MainActivity extends AccessibilityService {
 
-    private String hostName = "192.168.1.3"; //192.168.43.87 - IP FCUL //192.168.1.7 - IP DESKTOP //192.168.1.3 - IP PORTATIL
-    private int portNumber = 5454;
+    private String hostName = "192.168.1.4"; //192.168.43.87 - IP FCUL //192.168.1.7 - IP DESKTOP //192.168.1.3 - IP PORTATIL
+    private int portNumber = 5555;
     private Socket kkSocket;
     private PrintWriter out;
     private BufferedReader in;
@@ -534,7 +535,7 @@ public class MainActivity extends AccessibilityService {
                 switch (myoGesture) {
                     case "Wave_In":
                         if (smartwatchGesture.compareTo("Palm_left") == 0) {
-                            //showToast("Navegar para trás");
+                            showToast("Navegar para trás");
                             if (!isVirtualMenu) {
                                 LastNode = ItemsList.get(1);
                                 if (ItemsList.get(1).getClassName().toString().compareTo("android.widget.EditText") == 0) {
@@ -553,12 +554,12 @@ public class MainActivity extends AccessibilityService {
                                 menu.unfocusElement(menu.getCurrentFocused());
                                 if (menu.getCurrentFocused() != 0) {
                                     menu.focusElement(menu.getCurrentFocused() - 1);
-                                    //showToast(menu.getMenuButtons().get(menu.getCurrentFocused()).getLabel() + " botão.");
+                                    showToast(menu.getMenuButtons().get(menu.getCurrentFocused()).getLabel() + " botão.");
                                     Log.d("MENU VIRTUAL", "Menu " + menu.getMenuName() + " focused.");
                                     Log.d("MENU VIRTUAL", "Botao " + menu.getMenuButtons().get(menu.getCurrentFocused()).getLabel() + " focado");
                                 } else {
                                     menu.focusElement(menu.getMenuButtons().size() - 1);
-                                    //showToast(menu.getMenuButtons().get(menu.getCurrentFocused()).getLabel() + " botão.");
+                                    showToast(menu.getMenuButtons().get(menu.getCurrentFocused()).getLabel() + " botão.");
                                     Log.d("MENU VIRTUAL", "Menu " + menu.getMenuName() + " focused.");
                                     Log.d("MENU VIRTUAL", "Botao " + menu.getMenuButtons().get(menu.getCurrentFocused()).getLabel() + " focado");
                                 }
@@ -569,16 +570,17 @@ public class MainActivity extends AccessibilityService {
                             if (!isVirtualMenu) {
                                 normalizationPitch = pitch_w;
                                 boolean isScrollable = false;
+                                Log.d("TESTING SCROLL WAVE_IN", ItemsList.get(1).toString());
                                 tempInfo = ItemsList.get(1).getParent();
 
-
                                 while (!isScrollable) {
-                                    if (tempInfo != null && tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") != 0 && tempInfo.getClassName().toString().compareTo("android.widget.ListView") != 0) {
-                                        Log.i("TESTING SCROLL WAVE_IN", " " + tempInfo.getClassName() + " " + tempInfo.toString() + "" + tempInfo);
+                                    if (tempInfo != null && tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") != 0 && tempInfo.getClassName().toString().compareTo("android.widget.ListView") != 0 && tempInfo.getClassName().toString().compareTo("android.support.v7.widget.RecyclerView") != 0) {
+                                        Log.i("TESTING SCROLL WAVE_IN", "1º IF" + tempInfo.getClassName() + " " + tempInfo.toString() + "" + tempInfo);
                                         tempInfo = tempInfo.getParent();
-                                    } else if (tempInfo != null && (tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") == 0 || tempInfo.getClassName().toString().compareTo("android.widget.ListView") == 0))
+                                    } else if (tempInfo != null && (tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") == 0 || tempInfo.getClassName().toString().compareTo("android.widget.ListView") == 0 || tempInfo.getClassName().toString().compareTo("android.support.v7.widget.RecyclerView") == 0)) {
+                                        Log.i("TESTING SCROLL WAVE_IN", "2º IF" + tempInfo.getClassName() + " " + tempInfo.toString() + "" + tempInfo);
                                         isScrollable = true;
-                                    else if (tempInfo != null && tempInfo.equals(tempInfo.getWindow().getRoot()))
+                                    }else if (tempInfo != null && tempInfo.equals(tempInfo.getWindow().getRoot()))
                                         break;
                                     else if (tempInfo == null)
                                         break;
@@ -587,7 +589,10 @@ public class MainActivity extends AccessibilityService {
 
                                 Log.i("TESTING SCROLL WAVE_IN", ItemsListRootNotVisible.size() + " size");
                                 //ItemsListRootNotVisible.get(0).performAction(AccessibilityNodeInfo.FOCUS_INPUT);
-                                tempInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+                                if(tempInfo != null)
+                                    tempInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+                                else
+                                    Log.i("SCROLL BACKWORD","CANT SCROLL FORWARD" );
 
                             }
 
@@ -597,7 +602,7 @@ public class MainActivity extends AccessibilityService {
                     case "Wave_Out":
                         Log.i("WAVE OUT", "WAVE_OUT");
                         if (smartwatchGesture.compareTo("Palm_left") == 0) {
-                            //showToast("Navegar para a frente");
+                            showToast("Navegar para a frente");
                             Log.i("WAVE OUT", "WAVE_OUT+PALM_LEFT");
                             if (!isVirtualMenu) {
                                 Log.i("WAVE OUT", "elemento anterior: " + ItemsList.get(0).getText() + " " + ItemsList.get(0).getContentDescription() + " elemento actual: " + ItemsList.get(1).getText() + " " + ItemsList.get(1).getContentDescription() + " elementos seguinte: " + ItemsList.get(2).getText() + " " + ItemsList.get(2).getContentDescription());
@@ -617,12 +622,12 @@ public class MainActivity extends AccessibilityService {
                                 menu.unfocusElement(menu.getCurrentFocused());
                                 if (menu.getCurrentFocused() + 1 != menu.getMenuButtons().size()) {
                                     menu.focusElement(menu.getCurrentFocused() + 1);
-                                  //  showToast(menu.getMenuButtons().get(menu.getCurrentFocused()).getLabel() + " botão.");
+                                   showToast(menu.getMenuButtons().get(menu.getCurrentFocused()).getLabel() + " botão.");
                                     Log.d("MENU VIRTUAL", "Menu " + menu.getMenuName() + " focused.");
                                     Log.d("MENU VIRTUAL", "Botao " + menu.getMenuButtons().get(menu.getCurrentFocused()).getLabel() + " focado");
                                 } else {
                                     menu.focusElement(0);
-                                    //showToast(menu.getMenuButtons().get(menu.getCurrentFocused()).getLabel() + " botão.");
+                                    showToast(menu.getMenuButtons().get(menu.getCurrentFocused()).getLabel() + " botão.");
                                     Log.d("MENU VIRTUAL", "Menu " + menu.getMenuName() + " focused.");
                                     Log.d("MENU VIRTUAL", "Botao " + menu.getMenuButtons().get(menu.getCurrentFocused()).getLabel() + " focado");
                                 }
@@ -636,10 +641,10 @@ public class MainActivity extends AccessibilityService {
 
 
                                 while (!isScrollable) {
-                                    if (tempInfo != null && tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") != 0 && tempInfo.getClassName().toString().compareTo("android.widget.ListView") != 0) {
+                                    if (tempInfo != null && tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") != 0 && tempInfo.getClassName().toString().compareTo("android.widget.ListView") != 0 && tempInfo.getClassName().toString().compareTo("android.support.v7.widget.RecyclerView") != 0) {
                                         Log.i("Description", " " + tempInfo.getClassName() + " " + tempInfo.toString() + "" + tempInfo);
                                         tempInfo = tempInfo.getParent();
-                                    } else if (tempInfo != null && (tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") == 0 || tempInfo.getClassName().toString().compareTo("android.widget.ListView") == 0))
+                                    } else if (tempInfo != null && (tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") == 0 || tempInfo.getClassName().toString().compareTo("android.widget.ListView") == 0 || tempInfo.getClassName().toString().compareTo("android.support.v7.widget.RecyclerView") == 0))
                                         isScrollable = true;
                                     else if (tempInfo != null && tempInfo.equals(tempInfo.getWindow().getRoot()))
                                         break;
@@ -650,7 +655,10 @@ public class MainActivity extends AccessibilityService {
 
                                 Log.i("teste", ItemsListRootNotVisible.size() + " size");
                                 //ItemsListRootNotVisible.get(0).performAction(AccessibilityNodeInfo.FOCUS_INPUT);
-                                tempInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD);
+                                if(tempInfo != null)
+                                    tempInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD);
+                                else
+                                    Log.i("SCROLL BACKWORD","CANT SCROLL BACKWARDS" );
 
                             }
 
@@ -659,7 +667,7 @@ public class MainActivity extends AccessibilityService {
                         //myo.notifyUserAction();
                         break;
                     case "Fist":
-                            //showToast("Clicar");
+                            showToast("Clicar");
                             if (!isVirtualMenu) {
                                 LastNode = ItemsList.get(1);
                                 lastUI.clear();
@@ -680,7 +688,7 @@ public class MainActivity extends AccessibilityService {
 
                     case "Hold":
 
-                        //showToast("Mudar foco");
+                        showToast("Mudar foco");
                         cameFromKeyboard = false;
                         if (WindowList.size() > 3) {
                             performGlobalActions(BACK_BUTTON);
@@ -1031,14 +1039,24 @@ public class MainActivity extends AccessibilityService {
 
     }
 
-    private void showToast(String text) {
+    private void showToast(final String text) {
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (mToast == null) {
+                    mToast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+                } else {
+                    mToast.setText(text);
+                }
+                mToast.show();
+
+            }
+        });
+
+
         //Log.w(TAG, text);
-        if (mToast == null) {
-            mToast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
-        } else {
-            mToast.setText(text);
-        }
-        mToast.show();
+
     }
 
 
@@ -1169,7 +1187,8 @@ public class MainActivity extends AccessibilityService {
 
                             gestureBuffer.add(new Gesture(fromServer, getGestureFromWatch()));
                             boolean isActivationGesture = true;
-                            if (gestureBuffer.size() >= 4) {
+                            //ACTIVATION CODE DISABLED FOR DEBUGGING PROCESS
+                            /*if (gestureBuffer.size() >= 4) {
                                 for(Gesture g : gestureBuffer)
                                     Log.d("DesktopMobile", "BUFFER: Gesture "+g.getGesture()+" Orientation: "+g.getOrientation()+ " Timestamp: "+g.getTimeStamp());
                                 Log.d("DesktopMobile", "TimeStamp: "+ (gestureBuffer.get(gestureBuffer.size() - 1).getTimeStamp() - gestureBuffer.get(0).getTimeStamp())+" buffer size: "+gestureBuffer.size());
@@ -1206,9 +1225,9 @@ public class MainActivity extends AccessibilityService {
                                     }
                                 }
                                 gestureBuffer.remove(0);
-                            }
+                            }*/
 
-
+                            gestureActivated = true;
                             if(gestureActivated)
                                 onPose(fromServer, getGestureFromWatch());
                         }
