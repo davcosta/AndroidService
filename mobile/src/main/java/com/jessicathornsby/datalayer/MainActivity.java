@@ -70,6 +70,8 @@ public class MainActivity extends AccessibilityService {
     private Context context;
     private String fromServer;
 
+    private Thread timeout;
+
     private boolean isVirtualMenu = false;
     com.jessicathornsby.datalayer.Menu menu;
     Button talkbutton;
@@ -1221,6 +1223,16 @@ public class MainActivity extends AccessibilityService {
                                         } else {
                                             gestureActivated = true;
                                             Log.d("Mobile", "GESTURE RECOGNITION ACTIVATED....");
+                                           timeout = new Thread(new Runnable() {
+                                                public void run(){
+                                                    try {
+                                                        Thread.sleep(5000);
+                                                    } catch (InterruptedException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+
+                                            });
                                         }
                                     }
                                 }
@@ -1228,8 +1240,12 @@ public class MainActivity extends AccessibilityService {
                             }*/
 
                             gestureActivated = true;
-                            if(gestureActivated)
+                            if(gestureActivated /*&& timeout.getState() == Thread.State.TIMED_WAITING*/) {
                                 onPose(fromServer, getGestureFromWatch());
+                            }else{
+                                gestureActivated = false;
+                                Log.d("Mobile", "GESTURE RECOGNITION DEACTIVATED DUE TO TIMEOUT OR NO ACTIVATION GESTURES WAS DONE....");
+                            }
                         }
 
                     } catch (IOException e) {
