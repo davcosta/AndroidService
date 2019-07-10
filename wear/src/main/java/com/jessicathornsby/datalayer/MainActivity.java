@@ -1,17 +1,20 @@
 package com.jessicathornsby.datalayer;
 
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.widget.Button;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 //import android.support.v4.content.LocalBroadcastManager;
+import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.support.wearable.activity.WearableActivity;
 import android.widget.TextView;
@@ -26,8 +29,13 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
-public class MainActivity extends WearableActivity implements SensorEventListener {
+public class MainActivity extends Service implements SensorEventListener {
 
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
     private TextView textView;
     Button talkButton;
@@ -38,20 +46,17 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private String previousGesture = "";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        textView =  findViewById(R.id.text);
-        talkButton =  findViewById(R.id.talkClick);
-
+    public void onCreate() {
+        super.onCreate();
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         List<Sensor> deviceSensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
 
-
+        String datapath = "/my_path";
+        new SendMessage(datapath, "Palm_left").start();
 //Create an OnClickListener//
-
+/*
         talkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +70,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
             }
         });
-
+*/
 //Register the local broadcast receiver//
 
         IntentFilter newFilter = new IntentFilter(Intent.ACTION_SEND);
@@ -75,7 +80,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
 
     }
-
+/*
     @Override
     protected void onResume() {
         super.onResume();
@@ -85,13 +90,13 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     @Override
     protected void onPause() {
         super.onPause();
-        sensorManager.unregisterListener(this);
+        //sensorManager.unregisterListener(this);
     }
 
-
+*/
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        //Log.d("smartwtach", sensorEvent.values[1]+"");
+        Log.d("smartwtach", sensorEvent.values[1]+"");
         String handPosition ="Palm_left";
         //Log.d("VALORES", "x: "+sensorEvent.values[0]+" y: "+sensorEvent.values[1]+" z: "+sensorEvent.values[2]);
         if((sensorEvent.values[0] > 8 && sensorEvent.values[1] > -1 && sensorEvent.values[2] > -1) ||

@@ -60,7 +60,7 @@ import com.thalmic.myo.Quaternion;
 
 public class MainActivity extends AccessibilityService {
 
-    private String hostName = "192.168.1.4"; //192.168.43.87 - IP FCUL //192.168.1.7 - IP DESKTOP //192.168.1.3 - IP PORTATIL
+    private String hostName = "192.168.1.2"; //192.168.43.87 - IP FCUL //192.168.1.7 - IP DESKTOP //192.168.1.3 - IP PORTATIL
     private int portNumber = 5555;
     private Socket kkSocket;
     private PrintWriter out;
