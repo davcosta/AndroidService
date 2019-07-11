@@ -576,10 +576,10 @@ public class MainActivity extends AccessibilityService {
                                 tempInfo = ItemsList.get(1).getParent();
 
                                 while (!isScrollable) {
-                                    if (tempInfo != null && tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") != 0 && tempInfo.getClassName().toString().compareTo("android.widget.ListView") != 0 && tempInfo.getClassName().toString().compareTo("android.support.v7.widget.RecyclerView") != 0) {
+                                    if (tempInfo != null && tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") != 0 && tempInfo.getClassName().toString().compareTo("android.widget.ListView") != 0 && tempInfo.getClassName().toString().compareTo("android.support.v7.widget.RecyclerView") != 0 && tempInfo.getClassName().toString().compareTo("android.support.v4.widget.NestedScrollView") != 0) {
                                         Log.i("TESTING SCROLL WAVE_IN", "1º IF" + tempInfo.getClassName() + " " + tempInfo.toString() + "" + tempInfo);
                                         tempInfo = tempInfo.getParent();
-                                    } else if (tempInfo != null && (tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") == 0 || tempInfo.getClassName().toString().compareTo("android.widget.ListView") == 0 || tempInfo.getClassName().toString().compareTo("android.support.v7.widget.RecyclerView") == 0)) {
+                                    } else if (tempInfo != null && (tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") == 0 || tempInfo.getClassName().toString().compareTo("android.widget.ListView") == 0 || tempInfo.getClassName().toString().compareTo("android.support.v7.widget.RecyclerView") == 0) || tempInfo.getClassName().toString().compareTo("android.support.v4.widget.NestedScrollView") != 0) {
                                         Log.i("TESTING SCROLL WAVE_IN", "2º IF" + tempInfo.getClassName() + " " + tempInfo.toString() + "" + tempInfo);
                                         isScrollable = true;
                                     }else if (tempInfo != null && tempInfo.equals(tempInfo.getWindow().getRoot()))
@@ -643,10 +643,10 @@ public class MainActivity extends AccessibilityService {
 
 
                                 while (!isScrollable) {
-                                    if (tempInfo != null && tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") != 0 && tempInfo.getClassName().toString().compareTo("android.widget.ListView") != 0 && tempInfo.getClassName().toString().compareTo("android.support.v7.widget.RecyclerView") != 0) {
+                                    if (tempInfo != null && tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") != 0 && tempInfo.getClassName().toString().compareTo("android.widget.ListView") != 0 && tempInfo.getClassName().toString().compareTo("android.support.v7.widget.RecyclerView") != 0 && tempInfo.getClassName().toString().compareTo("android.support.v4.widget.NestedScrollView") != 0) {
                                         Log.i("Description", " " + tempInfo.getClassName() + " " + tempInfo.toString() + "" + tempInfo);
                                         tempInfo = tempInfo.getParent();
-                                    } else if (tempInfo != null && (tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") == 0 || tempInfo.getClassName().toString().compareTo("android.widget.ListView") == 0 || tempInfo.getClassName().toString().compareTo("android.support.v7.widget.RecyclerView") == 0))
+                                    } else if (tempInfo != null && (tempInfo.getClassName().toString().compareTo("android.widget.ScrollView") == 0 || tempInfo.getClassName().toString().compareTo("android.widget.ListView") == 0 || tempInfo.getClassName().toString().compareTo("android.support.v7.widget.RecyclerView") == 0 || tempInfo.getClassName().toString().compareTo("android.support.v4.widget.NestedScrollView") != 0))
                                         isScrollable = true;
                                     else if (tempInfo != null && tempInfo.equals(tempInfo.getWindow().getRoot()))
                                         break;

@@ -52,6 +52,7 @@ public class MainActivity extends Service implements SensorEventListener {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         List<Sensor> deviceSensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
         String datapath = "/my_path";
         new SendMessage(datapath, "Palm_left").start();
@@ -80,6 +81,7 @@ public class MainActivity extends Service implements SensorEventListener {
 
 
     }
+
 /*
     @Override
     protected void onResume() {
